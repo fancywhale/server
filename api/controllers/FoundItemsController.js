@@ -40,15 +40,33 @@ module.exports = {
 	},
 
 	findOne: function(req, res) {
+		var getFeatureTypes = function(feature) {			
+			return FeatureTypes.findOne({uuid: feature.featureType})
+		}
+		var mapPresetFeatures = function(foundItem) {
+			if (foundItem && foundItem.presetFeatures)
+				return [foundItem, Promise.map(foundItem.presetFeatures, getFeatureTypes)]
+		}
+
+		var Promise = require("bluebird")
 		FoundItems.findOne({uuid: req.param('foundItemID')})
 		.populate('finder')
 		.populate('itemType')
 		.populate('foundLocation')
 		.populate('presetFeatures')
 		.populate('additionalFeatures')
-		.exec(function(err, foundItem) {
-			if (err) {return res.serverError(err)}
-			res.ok(foundItem)		
+		.then(mapPresetFeatures)
+		.spread(function(foundItem, presetFeatures) {
+			Promise.map(foundItem.additionalFeatures, getFeatureTypes).then(function(additionalFeatures) {
+				foundItem.presetFeatures.forEach(function(presetFeature, index, theArray) {
+					theArray[index].featureType = presetFeatures[index]
+				})
+				foundItem.additionalFeatures.forEach(function(additionalFeature, index, theArray) {
+					theArray[index].featureType = additionalFeatures[index]
+				})
+				res.ok(foundItem)
+
+			})
 		})
 	},
 
