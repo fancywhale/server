@@ -21,15 +21,44 @@
  */
 
 module.exports.routes = {
+	// users
+  'POST /users': 'UsersController.create',
+  'PUT /users/:unionID': 'UsersController.update',
+  'GET /users/:unionID': 'UsersController.findOne',
 
-  /***************************************************************************
-  *                                                                          *
-  * Custom routes here...                                                    *
-  *                                                                          *
-  * If a request to a URL doesn't match any of the custom routes above, it   *
-  * is matched against Sails route blueprints. See `config/blueprints.js`    *
-  * for configuration options and examples.                                  *
-  *                                                                          *
-  ***************************************************************************/
+  // addresses
+  'POST /users/:unionID/addresses': 'AddressesController.create',
+  'GET /users/:unionID/addresses': 'AddressesController.find',
+  'GET /users/:unionID/addresses/:addressID': 'AddressesController.findOne',
+  'PUT /users/:unionID/addresses/:addressID': 'AddressesController.update',
+  'DELETE /users/:unionID/addresses/:addressID': 'AddressesController.delete',
+  'PUT /users/:unionID/addresses/:addressID/primary': 'AddressesController.setPrimary',
+  'GET /users/:unionID/primaryaddress': 'AddressesController.getPrimary',
 
+  // feature types
+  'POST /featuretypes': 'FeatureTypesController.create',
+  'GET /featuretypes': 'FeatureTypesController.find',
+  'GET /featuretypes/:featuretypeID': 'FeatureTypesController.findOne',
+  'DELETE /featuretypes/:featuretypeID': 'FeatureTypesController.delete',
+
+  // items types
+  'POST /itemtypes': 'ItemTypesController.create',
+  'PUT /itemtypes/:itemtypeID/featuretypes/:featuretypeID': 'ItemTypesController.addFeatureType',
+  'DELETE /itemtypes/:itemtypeID/featuretypes/:featuretypeID': 'ItemTypesController.removeFeatureType',
+  'GET /itemtypes': 'ItemTypesController.find',
+  'GET /itemtypes/:itemtypeID': 'ItemTypesController.findOne',
+  'DELETE /itemtypes/:itemtypeID': 'ItemTypesController.delete',
+
+  // found items
+  'POST /users/:unionID/founditems': 'FoundItemsController.create',
+  'GET /users/:unionID/founditems': 'FoundItemsController.find',
+  'PUT /users/:unionID/founditems/:foundItemID': 'FoundItemsController.update',
+  'GET /users/:unionID/founditems/:foundItemID': 'FoundItemsController.findOne',
+  'POST /users/:unionID/founditems/search': 'FoundItemsController.search',
+
+  // lost items
+  'POST /users/:unionID/lostitems': 'LostItemsController.create',
+  'GET /users/:unionID/lostitems': 'LostItemsController.find',
+  'GET /users/:unionID/lostitems/:lostitemID': 'LostItemsController.findOne',
+  'PUT /users/:unionID/lostitems/:lostItemID': 'LostItemsController.update'  
 };
