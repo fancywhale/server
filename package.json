@@ -1,10 +1,12 @@
 {
-  "name": "server",
+  "name": "Server",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "Lost and Found Service",
   "keywords": [],
   "dependencies": {
+    "basic-auth": "^1.1.0",
+    "bcrypt": "^1.0.2",
     "bluebird": "^3.5.0",
     "ejs": "2.3.4",
     "grunt": "1.0.1",
@@ -20,6 +22,8 @@
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "0.5.2",
     "include-all": "^1.0.0",
+    "jsonwebtoken": "^7.4.1",
+    "lokijs": "^1.5.0",
     "rc": "1.0.1",
     "request": "^2.81.0",
     "sails": "~0.12.13",

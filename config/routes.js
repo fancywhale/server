@@ -22,9 +22,10 @@
 
 module.exports.routes = {
 	// users
-  'POST /users': 'UsersController.create',
-  'PUT /users/:unionID': 'UsersController.update',
-  'GET /users/:unionID': 'UsersController.findOne',
+  'POST /users/register': 'UsersController.create',
+  'POST /users/authenticate': 'UsersController.authenticate',
+  'PUT /users/:userID': 'UsersController.update',
+  'GET /users/:userID': 'UsersController.findOne',
 
   // addresses
   'POST /users/:unionID/addresses': 'AddressesController.create',
