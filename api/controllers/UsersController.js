@@ -6,6 +6,9 @@
  */
 var jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
+var request = require("request")
+var redis = require("redis"),
+    client = redis.createClient();
 
 module.exports = {
 	/**
@@ -52,16 +55,26 @@ module.exports = {
    * }
 	 */
 	
-	create: function (req, res) {
-		Users.create(req.body).exec(function(err, user) {
-			if (err) {return res.serverError(err)}
-			var payload = {
-				"uuid": user.uuid
+	createWithPhone: function(req, res) {
+		client.get(req.body.phone, function(err, reply) {
+			if (reply == req.body.verificationCode) {
+				Users.create(req.body).exec(function(err, user) {
+					if (err) {
+						return res.serverError(err)
+					}
+					var payload = {
+						"uuid": user.uuid
+					}
+					var token = jwt.sign(payload, process.env.TOKEN_KEY, {
+						expiresIn: '24h'
+					})
+					delete user.password
+					user["accessToken"] = token
+					return res.created(user);
+				})
+			} else {
+				res.badRequest('Wrong Verification Code')
 			}
-			var token = jwt.sign(payload, process.env.TOKEN_KEY, { expiresIn: '24h' })
-			delete user.password
-			user["accessToken"] = token
-  		return res.created(user);
 		})
 	},
 
@@ -85,6 +98,27 @@ module.exports = {
 		}) 
 	},
 
+	sendVerificationSMS: function(req, res) {
+		var code = Math.floor(Math.random()*9000)+1000
+		var phone = req.body.phone
+		var options = { method: 'GET',
+		  url: 'http://sms.tehir.cn/code/sms/api/v1/send',
+		  qs: 
+		   { srcSeqId: '123',
+		     account: '18551815695',
+		     password: 'xzw1989724',
+		     mobile: phone,
+		     code: code.toString(),
+		     time: '10分钟' } };
+
+		request(options, function (error, response, body) {
+		  if (error || JSON.parse(body).responseCode != "0") res.serverError(error)
+		  client.set(phone,  code, function(err, reply) {
+		  	res.ok()
+		  });
+		})
+	},
+
 	update: function (req, res) {
 		var userID =  req.param('userID')
 		Users.update({'uuid': userID}, req.body).exec(function(err, records) {
@@ -98,6 +132,13 @@ module.exports = {
 		Users.findOne({'uuid': userID}).exec(function(err, record) {
 			if (err) {return res.serverError(err)}
 			return res.ok(record)
+		})
+	},
+
+	delete: function (req, res) {
+		Users.destroy({'uuid': req.param('userID')}).exec(function(err, record) {
+			if (err) {return res.serverError(err)}
+			return res.ok()
 		})
 	}
 };

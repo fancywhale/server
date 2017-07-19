@@ -22,10 +22,11 @@
 
 module.exports.routes = {
 	// users
-  'POST /users/register': 'UsersController.create',
+  'POST /users/registerwithphone': 'UsersController.createWithPhone',
   'POST /users/authenticate': 'UsersController.authenticate',
   'PUT /users/:userID': 'UsersController.update',
   'GET /users/:userID': 'UsersController.findOne',
+  'DELETE /users/:userID': 'UsersController.delete',
 
   // addresses
   'POST /users/:unionID/addresses': 'AddressesController.create',
@@ -61,5 +62,12 @@ module.exports.routes = {
   'POST /users/:unionID/lostitems': 'LostItemsController.create',
   'GET /users/:unionID/lostitems': 'LostItemsController.find',
   'GET /users/:unionID/lostitems/:lostitemID': 'LostItemsController.findOne',
-  'PUT /users/:unionID/lostitems/:lostItemID': 'LostItemsController.update'  
+  'PUT /users/:unionID/lostitems/:lostItemID': 'LostItemsController.update',
+
+  // wx oauth
+  'POST /oauth2/wx': 'UsersController.oauth2',
+
+  // verification
+  'POST /verificationsms': 'UsersController.sendVerificationSMS',
+  'POST /verificationemail': 'UsersController.sendVerificationEmail'   
 };

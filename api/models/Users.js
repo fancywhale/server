@@ -24,8 +24,13 @@ module.exports = {
             "type": "string"
         },
         "nickName": {
-            "type": "string",
-            "required": true
+            "type": "string"
+        },
+        "firstName": {
+            "type": "string"
+        },
+        "lastName": {
+            "type": "string"
         },
         "gender": {
             "type": "integer"
