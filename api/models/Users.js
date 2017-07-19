@@ -57,7 +57,6 @@ module.exports = {
         },
         "password": {
             "type": "string",
-            "required": true,
             "minLength": 6
         },
         "addresses": {
@@ -78,11 +77,14 @@ module.exports = {
         }
     },
     beforeCreate: function (values, cb) {
-        bcrypt.hash(values.password, 10, function(err, hash) {
-            if (err) return cb(err);
-            values.password = hash;
-            cb();
-        });
+        if (values.password)
+            bcrypt.hash(values.password, 10, function(err, hash) {
+                if (err) return cb(err);
+                values.password = hash;
+                cb();
+            });
+        else
+            cb()
     }
 };
 

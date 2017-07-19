@@ -35,8 +35,6 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 	UsersController: {
-		create: true,
-    authenticate: true,
     update: 'userTokenAuth',
     findOne: 'userTokenAuth'
 	}

@@ -65,7 +65,7 @@ module.exports.routes = {
   'PUT /users/:unionID/lostitems/:lostItemID': 'LostItemsController.update',
 
   // wx oauth
-  'POST /oauth2/wx': 'UsersController.oauth2',
+  'GET /oauth2/wx': 'UsersController.oauth2',
 
   // verification
   'POST /verificationsms': 'UsersController.sendVerificationSMS',
